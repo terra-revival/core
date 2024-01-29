@@ -45,6 +45,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	forward "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v6/router"
+	forwardtypes "github.com/cosmos/ibc-apps/middleware/packet-forward-middleware/v6/router/types"
 
 	terraappparams "github.com/classic-terra/core/v2/app/params"
 
@@ -117,6 +119,7 @@ var (
 		customfeegrant.AppModuleBasic{},
 		ibc.AppModuleBasic{},
 		ica.AppModuleBasic{},
+		forward.AppModuleBasic{},
 		customupgrade.AppModuleBasic{},
 		customevidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
@@ -192,6 +195,7 @@ func appModules(
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
 		dyncomm.NewAppModule(appCodec, app.DyncommKeeper, app.StakingKeeper),
 		ibchooks.NewAppModule(app.AccountKeeper),
+		app.ForwardModule,
 	}
 }
 
@@ -224,6 +228,7 @@ func simulationModules(
 		treasury.NewAppModule(appCodec, app.TreasuryKeeper),
 		wasm.NewAppModule(appCodec, &app.WasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
 		dyncomm.NewAppModule(appCodec, app.DyncommKeeper, app.StakingKeeper),
+		app.ForwardModule,
 	}
 }
 
@@ -248,6 +253,7 @@ func orderBeginBlockers() []string {
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,
+		forwardtypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		ibchooktypes.ModuleName,
 		// Terra Classic modules
@@ -280,6 +286,7 @@ func orderEndBlockers() []string {
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,
+		forwardtypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		ibchooktypes.ModuleName,
 		// Terra Classic modules
@@ -312,6 +319,7 @@ func orderInitGenesis() []string {
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,
+		forwardtypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		ibchooktypes.ModuleName,
 		// Terra Classic modules
